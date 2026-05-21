@@ -1,23 +1,16 @@
 #include "../include/types.h"
+#include "../include/vga.h"
 
-// VGA text buffer address - this is where screen output lives
-#define VGA_BUFFER 0xB8000
-#define VGA_WHITE_ON_BLACK 0x0F
-
-// Write a string directly to the VGA buffer (your screen)
-void print(const char* str) {
-    uint16_t* vga = (uint16_t*)VGA_BUFFER;
-    int i = 0;
-    while (str[i] != '\0') {
-        vga[i] = (uint16_t)str[i] | (uint16_t)(VGA_WHITE_ON_BLACK << 8);
-        i++;
-    }
-}
-
-// This is the main entry point - called by the bootloader
 void kernel_main() {
-    print("Caliber OS - Booting...");
+    // Initialize VGA driver
+    vga_init();
 
-    // Hang forever (for now)
+    // Print Caliber OS boot message
+    vga_print_color("Caliber OS\n", VGA_LIGHT_CYAN, VGA_BLACK);
+    vga_print_color("Version 1.0\n", VGA_LIGHT_GREY, VGA_BLACK);
+    vga_print_color("------------\n", VGA_DARK_GREY, VGA_BLACK);
+    vga_print("Booting...\n");
+
+    // Hang forever
     while (1) {}
 }
